@@ -1,0 +1,8 @@
+src/
+test/
+tmp/
+.babelrc
+.editorconfig
+README.md
+.travis.yml
+coverage/
