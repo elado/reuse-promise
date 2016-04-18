@@ -82,7 +82,7 @@ function findArticle(articleId) {
   })
 }
 
-const findArticleReusedPromise = reusePromise(findArticle)
+const findArticleReusedPromise = reusePromise(findArticle/*, options */)
 
 
 // will issue first request for articleId=1
