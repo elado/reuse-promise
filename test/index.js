@@ -13,7 +13,7 @@ describe('reusePromise', function () {
   class Test {
     @reusePromise()
     find(id) {
-      return new Promise((resolve, reject) => {
+      return new Promise(resolve => {
         setTimeout(() => {
           resolve({ id: id })
         }, 5)
@@ -24,14 +24,14 @@ describe('reusePromise', function () {
     findWithError(id) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          reject(new Error)
+          reject(new Error(id))
         }, 5)
       })
     }
 
     @reusePromise({ memoize: true })
     findAndMemoize(id) {
-      return new Promise((resolve, reject) => {
+      return new Promise(resolve => {
         setTimeout(() => {
           resolve({ id: id })
         }, 5)
@@ -58,9 +58,9 @@ describe('reusePromise', function () {
     assert.equal(p2, test.find(2))
     assert.notEqual(p1, test.find(2))
 
-    const p3 = test.find(2, 'a', {x: 1})
+    const p3 = test.find(2, 'a', { x: 1 })
     assert.notEqual(p3, test.find(2))
-    assert.equal(p3, test.find(2, 'a', {x: 1}))
+    assert.equal(p3, test.find(2, 'a', { x: 1 }))
   })
 
   it('reuses the same returned value if the current one is still pending', function (done) {
@@ -100,7 +100,7 @@ describe('reusePromise', function () {
   })
 
   it('fullfils the promise once with same value', function (done) {
-    const promises = [test.find(1), test.find(1), test.find(1)]
+    const promises = [ test.find(1), test.find(1), test.find(1) ]
     const values = []
     let pending = promises.length
 
@@ -123,7 +123,7 @@ describe('reusePromise', function () {
   })
 
   it('rejects the promise once with same error', function (done) {
-    const promises = [test.findWithError(1), test.findWithError(1), test.findWithError(1)]
+    const promises = [ test.findWithError(1), test.findWithError(1), test.findWithError(1) ]
     const errors = []
     let pending = promises.length
 

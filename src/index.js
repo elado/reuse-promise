@@ -97,7 +97,7 @@ export default function reusePromise(origFn, options={}) {
 
   const wrappedFn = function (...args) {
     const key = args
-    const memoizeValueKey = ['memoized', key]
+    const memoizeValueKey = [ 'memoized', key ]
 
     const pendingPromise = pendingPromisesMap.get(origFn, key)
 
