@@ -17,9 +17,12 @@ function findArticle(articleId) {
   })
 }
 
-findArticle(1).then(article1 => console.log(article1)) // issues first request for articleId=1
-findArticle(1).then(article1 => console.log(article1)) // issues second request for articleId=1
-findArticle(2).then(article2 => console.log(article2)) // issues first request for articleId=2
+// will issue first request for articleId=1
+findArticle(1).then(article1 => console.log(article1))
+// will issue second request for articleId=1
+findArticle(1).then(article1 => console.log(article1))
+// will issue first request for articleId=2
+findArticle(2).then(article2 => console.log(article2))
 ```
 
 `reuse-promise` decorates a function and temporary memoizes a promise until it's resolved. In this case, the first call for `articleId=1` will create the new promise, issue the HTTP request, and remember that created promise for `articleId=1`. The second call with the same argument will return the same promise from earlier call.
@@ -58,9 +61,12 @@ class ArticleService {
 
 const articleService = new ArticleService()
 
-articleService.find(1).then(article1 => console.log(article1)) // issues first request for articleId=1
-articleService.find(1).then(article1 => console.log(article1)) // DOES NOT issue any request for articleId=1, will reuse the promise that was created in previous call
-articleService.find(2).then(article2 => console.log(article2)) // issues first request for articleId=2
+// will issue first request for articleId=1
+articleService.find(1).then(article1 => console.log(article1))
+// WILL NOT issue any request for articleId=1, will reuse the promise that was created in previous call
+articleService.find(1).then(article1 => console.log(article1))
+// will issue first request for articleId=2
+articleService.find(2).then(article2 => console.log(article2))
 ```
 
 ### Wrapping a function
@@ -79,9 +85,12 @@ function findArticle(articleId) {
 const findArticleReusedPromise = reusePromise(findArticle)
 
 
-findArticleReusedPromise(1).then(article1 => console.log(article1)) // issues first request for articleId=1
-findArticleReusedPromise(1).then(article1 => console.log(article1)) // DOES NOT issue any request for articleId=1, will reuse the promise that was created in previous call
-findArticleReusedPromise(2).then(article2 => console.log(article2)) // issues first request for articleId=2
+// will issue first request for articleId=1
+findArticleReusedPromise(1).then(article1 => console.log(article1))
+// WILL NOT issue any request for articleId=1, will reuse the promise that was created in previous call
+findArticleReusedPromise(1).then(article1 => console.log(article1))
+// will issue first request for articleId=2
+findArticleReusedPromise(2).then(article2 => console.log(article2))
 ```
 
 ### option: `memoize`
