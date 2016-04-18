@@ -124,6 +124,20 @@ setTimeout(() => {
 }, 1000)
 ```
 
+Clearing all memoized values of a function can be done with:
+
+```js
+reusePromise.clear(articleService.find)
+
+// or
+articleService.find.__reusePromise__clear()
+```
+
+Clear all:
+
+```js
+reusePromise.clear()
+```
 
 ## Test
 

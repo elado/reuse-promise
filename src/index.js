@@ -144,7 +144,7 @@ export default function reusePromise(origFn, options={}) {
 }
 
 export function clear(fn=undefined) {
-  if (fn == undefined) {
+  if (fn === undefined) {
     pendingPromisesMap.clear()
   }
   else {
