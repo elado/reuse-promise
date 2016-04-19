@@ -41,7 +41,7 @@ npm install reuse-promise --save
 
 `reuse-promise` can be used as a decorator in a class definition or as a wrapper to a function.
 
-### As a class decoartor
+### As a class decorator
 
 Requires `babel` and `babel-plugin-transform-decorators-legacy` plugin.
 
