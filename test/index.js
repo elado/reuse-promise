@@ -148,12 +148,33 @@ describe('reusePromise', function () {
     }
   })
 
-  it('can clear cache for specific function', async function () {
+  it('can clear promise cache for a specific function before it\'s executed', async function () {
     const p1 = test.find(1)
     assert.equal(p1, test.find(1))
 
-    test.find.__reusePromise__clear()
+    reusePromise.clear(test.find)
     assert.notEqual(p1, test.find(1))
+  })
+
+  it('can clear memoized value cache for a specific function', async function () {
+    const p1 = test.findAndMemoize(1)
+    assert.equal(p1, test.findAndMemoize(1))
+
+    reusePromise.clear(test.findAndMemoize)
+    assert.notEqual(p1, test.findAndMemoize(1))
+  })
+
+  it('can clear all memoized cache', async function () {
+    const p1 = test.findAndMemoize(1)
+    assert.equal(p1, test.findAndMemoize(1))
+
+    const p2 = test.findAndMemoize(2)
+    assert.equal(p2, test.findAndMemoize(2))
+
+    reusePromise.clear(test.findAndMemoize)
+
+    assert.notEqual(p1, test.findAndMemoize(1))
+    assert.notEqual(p2, test.findAndMemoize(2))
   })
 })
 

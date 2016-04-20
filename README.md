@@ -10,11 +10,9 @@ A common case is a function that gets an `articleId` and returns a promise that 
 
 ```js
 function findArticle(articleId) {
-  return new Promise((resolve, reject) => {
-    fetch(`/article/${articleId}`).then(r => r.json()).then(function (data) {
-      resolve(data)
-    })
-  })
+  return fetch(`/article/${articleId}`).then(r => r.json())
+  // could also be
+  // return new Promise(...)
 }
 
 // will issue first request for articleId=1
@@ -25,11 +23,9 @@ findArticle(1).then(article1 => console.log(article1))
 findArticle(2).then(article2 => console.log(article2))
 ```
 
-`reuse-promise` decorates a function and temporary memoizes a promise until it's resolved. In this case, the first call for `articleId=1` will create the new promise, issue the HTTP request, and remember that created promise for `articleId=1`. The second call with the same argument will return the same promise from earlier call.
+`reuse-promise` decorates a function and **temporary** memoizes a promise until it's resolved. In this case, the first call for `articleId=1` will create the new promise, issue the HTTP request, and remember that created promise for `articleId=1`. The second call with the same argument will return the same promise from earlier call. However, once the original promise is resolved (or rejected), a new call to `findArticle(1)` will issue a new request.
 
-Promises are kept in cache and returned without recreating a new one only while they are in progress. When the promise is resolved, it'll be cleared from this temporary cache, allowing a new call to `findArticle(1)` to recreate a promise and issue an HTTP request.
-
-Promises are kept in an index by the arguments that were sent to the function, so `findArticle(1)` and `findArticles([1, 2, 3])` will go through the original function and create a new promise, and any following call with the same arguments will reuse the same promise. The comparison between two sets of arguments is by `JSON.stringify` the argument array, hence a call with a new array [1, 2, 3] will still reuse the same promise.
+An initial call to a wrapped function goes through the original function, and then indexes the returned promise by a json-serialized string of the arguments that were sent to the function. So `findArticles([1, 2, 3])` can be called twice and still return the same promise, becasue `JSON.stringify([1, 2, 3]) === JSON.stringify([1, 2, 3])`.
 
 ## Installation
 
@@ -51,11 +47,7 @@ import { decorator as reusePromise } from 'reuse-promise'
 class ArticleService {
   @reusePromise()
   find(articleId) {
-    return new Promise((resolve, reject) => {
-      fetch(`/article/${articleId}`).then(r => r.json()).then(function (data) {
-        resolve(data)
-      })
-    })
+    return fetch(`/article/${articleId}`).then(r => r.json())
   }
 }
 
@@ -75,11 +67,7 @@ articleService.find(2).then(article2 => console.log(article2))
 import reusePromise from 'reuse-promise'
 
 function findArticle(articleId) {
-  return new Promise((resolve, reject) => {
-    fetch(`/article/${articleId}`).then(r => r.json()).then(function (data) {
-      resolve(data)
-    })
-  })
+  return fetch(`/article/${articleId}`).then(r => r.json())
 }
 
 const findArticleReusedPromise = reusePromise(findArticle/*, options */)
@@ -103,11 +91,7 @@ import { decorator as reusePromise } from 'reuse-promise'
 class ArticleService {
   @reusePromise({ memoize: true })
   find(articleId) {
-    return new Promise((resolve, reject) => {
-      fetch(`/article/${articleId}`).then(r => r.json()).then(function (data) {
-        resolve(data)
-      })
-    })
+    return fetch(`/article/${articleId}`).then(r => r.json())
   }
 }
 
