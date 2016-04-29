@@ -4,7 +4,9 @@
 
 ## Purpose
 
-When a function returns a promise and it's being called from multiple places in the app, new promises are being instantiated, and multiple async operations are be executed.
+> **TL;DR** - Prevent from a unique async process (function that returns a promise) to run more than once concurrently by temporarily caching the promise until it's resolved/rejected.
+
+When a function returns a promise and it's being called from multiple places in the app, new promises are being instantiated, and multiple async operations are going to be executed.
 
 A common case is a function that gets an `articleId` and returns a promise that calls API. This function can be called from multiple places, each time will create a new promise and will issue a new request. This is usually not desired:
 
