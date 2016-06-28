@@ -4,18 +4,22 @@
 const _allPromiseMapsByArgs = []
 const _allMemoizedValueMapsByArgs = []
 
-function serializeKey(key) {
+function serializeArguments(key) {
   return JSON.stringify(key)
 }
 
 export default function reusePromise(origFn, options={}) {
-  options = { memoize: false, ...options }
+  options = {
+    memoize: false,
+    serializeArguments,
+    ...options
+  }
 
   const promiseMapsByArgs = {}
   const memoizedValuesByArgs = {}
 
   const wrappedFn = function (...args) {
-    const key = serializeKey(args)
+    const key = options.serializeArguments(args)
 
     const pendingPromise = promiseMapsByArgs[key]
 
