@@ -1,5 +1,4 @@
 // TODO compare key with shallow equal, not JSON
-// TODO equality check function
 
 const _allPromiseMapsByArgs = []
 const _allMemoizedValueMapsByArgs = []
