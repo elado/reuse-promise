@@ -125,6 +125,16 @@ Clear all:
 reusePromise.clear()
 ```
 
+### option `serializeArguments`
+
+A custom argument serializer can be provided. To reuse promises based on the first letter of the first argument, for example, provide:
+
+```js
+{
+  serializeArguments: args => args[0][0]
+}
+```
+
 ## Test
 
 ```sh
