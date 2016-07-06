@@ -127,12 +127,26 @@ reusePromise.clear()
 
 ### option: `serializeArguments`
 
+By default, `reuse-promise` indexes promises in a dictionarty where the key is all arguments `JSON.stringify`ied. This is sometimes an unnecessary process, especially when sending big objects as arguments.
+
 A custom argument serializer can be provided. To reuse promises based on the first letter of the first argument, for example, provide:
 
 ```js
-{
+@reusePromise({
   serializeArguments: args => args[0][0]
-}
+})
+```
+
+Or, to grab an ID of a given model without having it all serialized:
+
+```js
+updateUserName = reusePromise(updateUserName, {
+  serializeArguments: args => args[0].id
+})
+
+const someUser = { id: 1, name: 'name' }
+
+updateUserName(someUser, 'new name')
 ```
 
 ## Test

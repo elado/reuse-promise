@@ -1,6 +1,6 @@
 {
   "name": "reuse-promise",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Reuse the same promise until resolved when retrieving it from a function",
   "main": "lib/index.js",
   "scripts": {

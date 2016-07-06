@@ -1,5 +1,3 @@
-// TODO compare key with shallow equal, not JSON
-
 const _allPromiseMapsByArgs = []
 const _allMemoizedValueMapsByArgs = []
 
