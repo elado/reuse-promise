@@ -37,6 +37,15 @@ describe('reusePromise', function () {
         }, 5)
       })
     }
+
+    @reusePromise({ serializeArguments: args => args[0][0] })
+    findWithCustomSerializer(id) {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve({ id: id })
+        }, 5)
+      })
+    }
   }
 
   let test
@@ -175,6 +184,16 @@ describe('reusePromise', function () {
 
     assert.notEqual(p1, test.findAndMemoize(1))
     assert.notEqual(p2, test.findAndMemoize(2))
+  })
+
+  it('supports custom serializers', async function () {
+    const p1 = test.findWithCustomSerializer('123')
+    const p2 = test.findWithCustomSerializer('199')
+    assert.equal(p1, p2)
+
+    const p3 = test.findWithCustomSerializer('123')
+    const p4 = test.findWithCustomSerializer('234')
+    assert.notEqual(p3, p4)
   })
 })
 
