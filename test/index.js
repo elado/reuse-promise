@@ -101,11 +101,12 @@ describe('reusePromise', function () {
     assert.notEqual(p1, test.find(1))
   })
 
-  it('keeps the previous value if {memoize: true} even after promise resolved', async function () {
-    const p1value = await test.findAndMemoize(1)
-    const p2value = await test.findAndMemoize(1)
+  it('keeps the previous promise if {memoize: true} even after promise resolved', async function () {
+    const p1 = test.findAndMemoize(1)
+    await p1
+    const p2 = test.findAndMemoize(1)
 
-    assert.equal(p1value, p2value)
+    assert.equal(p1, p2)
   })
 
   it('fullfils the promise once with same value', function (done) {

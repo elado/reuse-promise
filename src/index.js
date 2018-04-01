@@ -1,5 +1,4 @@
 const _allPromiseMapsByArgs = []
-const _allMemoizedValueMapsByArgs = []
 
 function serializeArguments(key) {
   return JSON.stringify(key)
@@ -13,7 +12,6 @@ export default function reusePromise(origFn, options={}) {
   }
 
   const promiseMapsByArgs = {}
-  const memoizedValuesByArgs = {}
 
   const wrappedFn = function (...args) {
     const key = options.serializeArguments(args)
@@ -22,15 +20,12 @@ export default function reusePromise(origFn, options={}) {
 
     if (pendingPromise) return pendingPromise
 
-    if (options.memoize && key in memoizedValuesByArgs) return Promise.resolve(memoizedValuesByArgs[key])
-
     const forgetPromise = () => delete promiseMapsByArgs[key]
 
     const origPromise = origFn.apply(this, args)
 
     const promise = origPromise.then(value => {
-      if (options.memoize) memoizedValuesByArgs[key] = value
-      forgetPromise()
+      if (!options.memoize) forgetPromise()
       return value
     }, err => {
       forgetPromise()
@@ -44,9 +39,7 @@ export default function reusePromise(origFn, options={}) {
   wrappedFn.__reusePromise__origFn = origFn
   wrappedFn.__reusePromise__clear = function () { reusePromise.clear(wrappedFn) }
   wrappedFn.__reusePromise__promiseMapsByArgs = promiseMapsByArgs
-  wrappedFn.__reusePromise__memoizedValuesByArgs = memoizedValuesByArgs
   _allPromiseMapsByArgs.push(promiseMapsByArgs)
-  _allMemoizedValueMapsByArgs.push(memoizedValuesByArgs)
 
   return wrappedFn
 }
@@ -58,11 +51,9 @@ function clearObject(object) {
 export function clear(fn=undefined) {
   if (fn === undefined) {
     _allPromiseMapsByArgs.forEach(clearObject)
-    _allMemoizedValueMapsByArgs.forEach(clearObject)
   }
   else {
     clearObject(fn.__reusePromise__promiseMapsByArgs)
-    clearObject(fn.__reusePromise__memoizedValuesByArgs)
   }
 }
 
